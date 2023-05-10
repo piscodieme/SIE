@@ -1,0 +1,90 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.footer{
+  bottom: 0;
+  height: 50px;
+  background-color: black;
+  text-align: center;
+  color: white;
+}
+
+.module{
+  color : white;
+  text-decoration: none;
+  margin-left: 10px;
+}
+.module:hover{
+ transform: scale(1.2);
+  
+}
+
+.header{
+  width: 100%;
+}
+
+.UpdateDeleteBtn{
+  margin-right: 5px;
+  height: 40px;
+}
+
+.danger{
+  color: red;
+}
+
+@font-face {
+  font-family: myFont;
+  src: url(../public/PlayfairDisplay-Italic-VariableFont_wght.ttf);
+}
+
+.myFont{
+  font-family: myFont;
+}
+
+.primary{
+  background-color: #FF6D60;
+}
+.secondary{
+  background-color: #F7D060;
+}
+.third{
+  background-color: #F3E99F;
+}
+.fourth{
+  background-color: #98D8AA;
+}
