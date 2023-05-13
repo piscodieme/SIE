@@ -88,3 +88,57 @@
 .fourth{
   background-color: #98D8AA;
 }
+
+.formAchat{
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15%;
+}
+.otherButton{
+  width: 9em;
+  height: 3em;
+  border-radius: 30em;
+  font-size: 15px;
+  font-family: inherit;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 6px 6px 12px #FF6D60 -6px -6px 12px #F7D060 ;  
+}
+.myButton{
+  margin-right: 1em;
+  width: 9em;
+  height: 3em;
+  border-radius: 30em;
+  font-size: 15px;
+  font-family: inherit;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  background:#98D8AA ;
+  box-shadow: 6px 6px 12px #FF6D60 -6px -6px 12px #F7D060 ;  
+}
+.myButton::before{
+  content: '';
+  width: 0;
+  height: 3em;
+  border-radius: 30em;
+  position: absolute;
+  top:0;
+  left: 0;
+  background-image: linear-gradient(to right, #98D8AA 0%, #FF6D60 100%);
+  transition: .5s ease;
+  display: block;
+  z-index: -1;
+}
+.myButton:hover::before{
+  width: 9em;
+}
+
+

@@ -14,6 +14,11 @@ import PrivateRoute from './PrivateRoute';
 import { useEffect, useState } from 'react';
 import MenageElecList from './Components/MenageElecList';
 import MenageElecZrFrom from './Components/MenageElecZrFrom';
+import AchatEnergieParSenelec from './Components/AchatEnergieParSenelec';
+import AddAchatFormComponent from './Components/AddAchatFormComponent';
+import VenteParSecteurComponent from './Components/VenteParSecteurComponent';
+import AddVenteParSecteurFormComponent from './Components/AddVenteParSecteurFormComponent';
+import ConsommationMoyParCommune from './Components/ConsommationMoyParCommune';
 
 function App() {
   const [isLogged, setIsLogged]=useState(false);
@@ -43,6 +48,12 @@ function App() {
                       <Route path='/electricite'  element={<HeaderComponent />}></Route>
                       <Route path='/nbMenage'  element={<MenageElecList />}></Route>
                       <Route path='/AddMenageZRPage/:id'  element={<MenageElecZrFrom />}></Route>
+                      <Route path='/achatsenelec'  element={<AchatEnergieParSenelec />}></Route>
+                      <Route path='/addachat'  element={<AddAchatFormComponent />}></Route>
+                      <Route path='/venteparsecteur'  element={<VenteParSecteurComponent />}></Route>
+                      <Route path='/addventesecteur'  element={<AddVenteParSecteurFormComponent />}></Route>
+                      <Route path='/consomoy'  element={<ConsommationMoyParCommune />}></Route>
+
                       
                   </Route>
                   

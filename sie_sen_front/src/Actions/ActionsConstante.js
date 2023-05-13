@@ -1,0 +1,2 @@
+export const CLOSE_SUCCESS = 'CLOSE_SUCCESS';
+export const OPEN_SUCCESS = 'OPEN_SUCCESS';

@@ -13,6 +13,9 @@ class HeaderComponent extends Component {
                             <a href="/nivten" className='navbar-brand module'>Niveau de Tension</a>
                             <a href="/usage" className='navbar-brand module'>Usage</a>
                             <a href="/nbMenage" className='navbar-brand module'>Menages Electrifiés</a>
+                            <a href="/achatsenelec" className='navbar-brand module'>Achat Energie par SENELEC</a>
+                            <a href="/venteparsecteur" className='navbar-brand module'>Achat Energie par SENELEC</a>
+                            <a href="/consomoy" className='navbar-brand module'>Consommation Moyenne</a>
 
                         </div>
                     </nav>
