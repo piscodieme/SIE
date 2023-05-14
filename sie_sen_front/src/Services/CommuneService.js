@@ -8,7 +8,7 @@ class CommuneService{
     }
 
     add(commune){
-        return axios.get(url,commune)
+        return axios.post(url,commune)
     }
 }
 export default new CommuneService()

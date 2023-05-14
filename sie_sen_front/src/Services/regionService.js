@@ -7,5 +7,9 @@ class regionService{
     getRegions(){
         return axios.get(regionUrl);
     }
+
+    add(region){
+        return axios.post(regionUrl,region);
+    }
 }
 export default new regionService()

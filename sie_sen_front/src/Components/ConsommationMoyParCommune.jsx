@@ -5,17 +5,41 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ConsommationMoyParCommuneService from '../Services/ConsommationMoyParCommuneService';
 import CommuneService from '../Services/CommuneService';
 import regionService from '../Services/regionService';
+import DepartementService from '../Services/DepartementService';
 
 export default function ConsommationMoyParCommune() {
     const Navigate = useNavigate();
 
-    const {register, handleSubmit} = useForm();
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+      } = useForm({
+        mode: "onBlur",
+      });
+    
+      const {
+        register: register2,
+        formState: { errors: errors2 },
+        handleSubmit: handleSubmit2,
+      } = useForm({
+        mode: "onBlur",
+      });
+      const {
+        register: register3,
+        formState: { errors: errors3 },
+        handleSubmit: handleSubmit3,
+      } = useForm({
+        mode: "onBlur",
+      });
     const [conso, setConso] = useState([]);
     const [commune, setCommune] = useState([]);
     const [region, setRegion] = useState([]);
     const [departement, setDepartement] = useState([]);
     const [annee, setAnnee] = useState([]);
     const [msg, setMsg] = useState('');
+    const [showNotif,setShowNotif] = useState(false);
+    const [showNotifError,setShowNotifError] = useState(false);
     const [showAddCommune, setShowAddCommune] = useState(false);
     const [showAddDepartement, setShowAddDepartement] = useState(false);
     const [showAddRegion, setShowAddRegion] = useState(false);
@@ -25,30 +49,67 @@ export default function ConsommationMoyParCommune() {
 
         useEffect(()=>{
 
-           /*  ConsommationMoyParCommuneService.getAll().then((res)=>{
+            ConsommationMoyParCommuneService.getAll().then((res)=>{
                 setConso(res.data);
                 console.log("hellooooooooooo");
             }).catch((err)=>{
                 console.log("error get all consoo  ",err);
-            }) */
+            })
 
             CommuneService.getAll().then((res)=>{
                 setCommune(res.data);
-                console.log("hellooooooooooo");
+                
             }).catch((err)=>{
                 console.log("error get all commune  ",err);
             })
 
             regionService.getRegions().then((res)=>{
                 setRegion(res.data);
-                console.log("hellooooooooooo");
+               
             }).catch((err)=>{
                 console.log("error get all region  ",err);
             })
-        })
-    
-    const onSubmit=()=>{
 
+            DepartementService.getAll().then((res)=>{
+                setDepartement(res.data);
+            }).catch((err)=>{
+                console.log("error get all departement  ",err);
+            })
+        },[])
+    
+    const onSubmit=(data)=>{
+       CommuneService.add(data).then((res)=>{
+        console.log(data);
+            setShowAddCommune(false);
+            setShowNotif(true);
+            setMsg("Commune créé avec Succès")
+       }).catch((err)=>{
+        setShowNotifError(true);
+        setMsg("Erreur création de la commune Réessayez SVP")
+       })
+    }
+
+    const onSubmitDep = (data) =>{
+        console.log(data)
+        DepartementService.add(data).then((res)=>{
+            setShowAddDepartement(false);
+            setShowNotif(true);
+            setMsg("Département créé avec Succès")
+        }).catch((err)=>{
+            setShowNotifError(true);
+            setMsg("Erreur Création du Département réessayez SVP")
+        })
+    }
+
+    const onSubmitReg = (data) =>{
+        regionService.add(data).then((res)=>{
+            setShowAddRegion(false);
+            setShowNotif(true);
+            setMsg("Région créée avec Succès")
+        }).catch((err)=>{
+            setShowNotifError(true);
+            setMsg("Erreur Création Région réessayez SVP")
+        })
     }
 
   return (
@@ -65,24 +126,41 @@ export default function ConsommationMoyParCommune() {
                   <div class="card-body">
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div class="form-group">
-                        <label for="nom_site">Nom du site :</label>
+                        <label for="nom_commune">Nom du Commune :</label>
                         <input type="text"
                             class="form-control" 
-                            name='site' id="nom_site" 
-                            placeholder="Entrez le nom du site" 
-                            {...register("site")}
+                            name='commune' id="nom_commune" 
+                            placeholder="Entrez le nom de la commune" 
+                            {...register("nomCommune")}
                             required
                             />
                       </div>
                       <div class="form-group">
-                        <label for="type_site">Type :</label>
-                        <input type="text" 
+                        <label for="departement">Departement</label>
+                        <select id="selectField" name="selectField" className="form-select" {...register("idDepartement")} required>
+                            <option>Choisir le departement de la commune</option>
+                            {departement.map((option) => (
+                                <option key={option.id} value={option.id}>{option.nomDepartement}</option>
+                            ))}
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="annee_creation">Année de Création :</label>
+                        <input type="text"
                             class="form-control" 
-                            name='type' id="type_site" 
-                            placeholder="Entrez le type de site" 
-                            {...register("type")} 
-                            required
+                            name='annee_creation' id="annee_creation" 
+                            placeholder="Entrez le nom l'année de création" 
+                            {...register("anneeCreation")}
+                            
                             />
+                      </div>
+                      <div class="form-group">
+                        <label for="departement">Zone (Urbaine / Rurale)</label>
+                        <select id="selectField" name="selectField" className="form-select" {...register("zone")} required>
+                            <option>Choisir la zone de la commune</option>
+                            <option>Urbaine</option>
+                            <option>Rurale</option>
+                        </select>
                       </div>
                       <button type="submit" class="myButton">Ajouter</button>
                       <button type="button" class="otherButton" onClick={()=>{setShowAddCommune(false)}}>Annuler</button>
@@ -96,34 +174,43 @@ export default function ConsommationMoyParCommune() {
                   <div class="card">
                   <div class="card-header">
                     Ajouter un Departement
-                    <button type="button" class="close" aria-label="Fermer" onClick={()=>{setShowAddCommune(false)}}>
+                    <button type="button" class="close" aria-label="Fermer" onClick={()=>{setShowAddDepartement(false)}}>
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit2(onSubmitDep)}>
                       <div class="form-group">
-                        <label for="nom_site">Nom du Département :</label>
+                        <label for="nomDepartement">Nom du Département :</label>
                         <input type="text"
                             class="form-control" 
-                            name='site' id="nom_site" 
-                            placeholder="Entrez le nom du site" 
-                            {...register("site")}
+                            name='nomDepartement' id="nomDepartement" 
+                            placeholder="Entrez le nom du Département" 
+                            {...register2("nomDepartement")}
                             required
                             />
                       </div>
                       <div class="form-group">
-                        <label for="type_site">Type :</label>
+                        <label for="departement">Région</label>
+                        <select id="selectField" name="selectField" className="form-select" {...register2("idRegion")} required>
+                            <option>Choisir la région du département</option>
+                            {region.map((option) => (
+                                <option key={option.id} value={option.id}>{option.nomRegion}</option>
+                            ))}
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="anneeCreation">Année de Création</label>
                         <input type="text" 
                             class="form-control" 
-                            name='type' id="type_site" 
-                            placeholder="Entrez le type de site" 
-                            {...register("type")} 
-                            required
+                            name='anneeCreation' id="anneeCreation" 
+                            placeholder="Entrez l'année de Création" 
+                            {...register2("anneeCreation")} 
+                            
                             />
                       </div>
                       <button type="submit" class="myButton">Ajouter</button>
-                      <button type="button" class="otherButton" onClick={()=>{setShowAddCommune(false)}}>Annuler</button>
+                      <button type="button" class="otherButton" onClick={()=>{setShowAddDepartement(false)}}>Annuler</button>
                     </form>
                   </div>
                 </div>
@@ -134,54 +221,54 @@ export default function ConsommationMoyParCommune() {
                   <div class="card">
                   <div class="card-header">
                     Ajouter une Région
-                    <button type="button" class="close" aria-label="Fermer" onClick={()=>{setShowAddCommune(false)}}>
+                    <button type="button" class="close" aria-label="Fermer" onClick={()=>{setShowAddRegion(false)}}>
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit3(onSubmitReg)}>
                       <div class="form-group">
-                        <label for="nom_site">Nom de la Région :</label>
+                        <label for="nomRegion">Nom de la Région :</label>
                         <input type="text"
                             class="form-control" 
-                            name='site' id="nom_site" 
-                            placeholder="Entrez le nom du site" 
-                            {...register("site")}
+                            name='nomRegion' id="nomRegion" 
+                            placeholder="Entrez le nom de la région" 
+                            {...register3("nomRegion")}
                             required
                             />
                       </div>
                       <div class="form-group">
-                        <label for="type_site">Type :</label>
+                        <label for="anneeCreation">Année Création</label>
                         <input type="text" 
                             class="form-control" 
-                            name='type' id="type_site" 
-                            placeholder="Entrez le type de site" 
-                            {...register("type")} 
-                            required
+                            name='anneeCreation' id="anneeCreation" 
+                            placeholder="Entrez l'année de création" 
+                            {...register3("anneeCreation")} 
+                            
                             />
                       </div>
                       <button type="submit" class="myButton">Ajouter</button>
-                      <button type="button" class="otherButton" onClick={()=>{setShowAddCommune(false)}}>Annuler</button>
+                      <button type="button" class="otherButton" onClick={()=>{setShowAddRegion(false)}}>Annuler</button>
                     </form>
                   </div>
                 </div>
                 
               }
               {
-                notifMsg && 
+                showNotif && 
                 <div className="alert alert-success">
                 {msg}
-                <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setNotifMsg(false)}}>
+                <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setShowNotif(false)}}>
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>
               
               }
               {
-                notifMsgError && 
+                showNotifError && 
                 <div className="alert alert-danger">
                 {msg}
-                <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setNotifMsgError(false)}}>
+                <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setShowNotifError(false)}}>
                     <span aria-hidden="true">&times;</span>
                 </button>
                 </div>              
