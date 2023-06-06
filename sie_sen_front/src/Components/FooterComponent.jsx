@@ -4,9 +4,9 @@ class FooterComponent extends Component {
     render() {
         return (
             <div>
-                <footer className='footer'>
+                {/* <footer className='footer'>
                     <span className='text-muted'> All Rights Reserved 2023 @BSD</span>
-                </footer>
+                </footer> */}
             </div>
         );
     }

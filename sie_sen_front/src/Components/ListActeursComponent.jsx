@@ -32,7 +32,7 @@ function ListActeursComponent () {
 
     const saveActor = (e) => {
         e.preventDefault();
-        let actor = {sigle:sigle, libelle:libelle,description:description};
+        let actor = {sigle:sigle, libelle:libelle,description:description,modele:1};
         console.log('acteurs = >> '+ JSON.stringify(actor));
 
         ActeursService.createActor(actor).then(res =>{
@@ -75,13 +75,11 @@ function ListActeursComponent () {
     },[])
 
         return (
-            <div>
-                <div Style="float:right">
-                    <button className='btn btn-success mt-2'  onClick={SignOut}>Déconnexion</button>
-                </div>
+            <div className='marTop'>
+                
                 <div className='row mt-3'>
                     <div className='col-sm-8'>
-                    <h2 className='text-center'>Liste des Acteurs</h2>
+                    <h2 className='text-center myFont'>Liste des Acteurs</h2>
 
                         <table className='table table-striped table-bordered mt-3'>
                             <thead>
@@ -117,8 +115,8 @@ function ListActeursComponent () {
                         </table>
                     </div>
                     <div className='col-sm-4'>
-                        <h2 className='text-center'>Ajout Acteur</h2>
-                        <div className='card col-md-10 offset-md-1 mt-3'>
+                        <h2 className='text-center myFont'>Ajout Acteur</h2>
+                        <div className='card col-md-12 offset-md-1 mt-3'>
                             <div className='card-body'>
                                 <form>
                                     <div className='form-group'>
@@ -136,8 +134,7 @@ function ListActeursComponent () {
                                         <input type="text" name="description" id="desc" placeholder='Description' className='form-control'
                                         value={description} onChange={changeDescHandler} />
                                     </div>
-                                    <button className='btn btn-success' onClick={saveActor}> Ajouter</button>
-                                    <button className='btn btn-warning' onClick={cancel} style={{marginLeft:"10px"}}> Annuler </button>
+                                    <button className='myButton' onClick={saveActor}> Ajouter</button>
 
                                 </form>
                             </div>

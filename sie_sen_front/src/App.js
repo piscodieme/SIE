@@ -19,6 +19,9 @@ import AddAchatFormComponent from './Components/AddAchatFormComponent';
 import VenteParSecteurComponent from './Components/VenteParSecteurComponent';
 import AddVenteParSecteurFormComponent from './Components/AddVenteParSecteurFormComponent';
 import ConsommationMoyParCommune from './Components/ConsommationMoyParCommune';
+import VenteEnergieNonFournie from './Components/VenteEnergieNonFournie';
+import Header from './Components/Header';
+import Homepage from './Components/Homepage';
 
 function App() {
   const [isLogged, setIsLogged]=useState(false);
@@ -36,8 +39,9 @@ function App() {
       <BrowserRouter>
         <div className='container'>
               <div className="container">
+              <Header/>
                 <Routes>
-                  <Route path='/' exact   element={ <LoginComponent/>}></Route>
+                  <Route path='/' exact   element={ <Homepage/>}></Route>
                   <Route element={ <PrivateRoute isLogged={isLogged}/>}>
                       <Route path='/acteurs' element={<ListActeursComponent/>}></Route>
                       <Route path='/updateActeurs/:id' element={<UpdateActeurcomponent/>}></Route>
@@ -53,6 +57,7 @@ function App() {
                       <Route path='/venteparsecteur'  element={<VenteParSecteurComponent />}></Route>
                       <Route path='/addventesecteur'  element={<AddVenteParSecteurFormComponent />}></Route>
                       <Route path='/consomoy'  element={<ConsommationMoyParCommune />}></Route>
+                      <Route path='/ventenf'  element={<VenteEnergieNonFournie />}></Route>
 
                       
                   </Route>

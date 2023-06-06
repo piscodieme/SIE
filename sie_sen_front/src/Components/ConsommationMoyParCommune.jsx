@@ -6,6 +6,7 @@ import ConsommationMoyParCommuneService from '../Services/ConsommationMoyParComm
 import CommuneService from '../Services/CommuneService';
 import regionService from '../Services/regionService';
 import DepartementService from '../Services/DepartementService';
+import AnneeService from '../Services/AnneeService';
 
 export default function ConsommationMoyParCommune() {
     const Navigate = useNavigate();
@@ -32,6 +33,14 @@ export default function ConsommationMoyParCommune() {
       } = useForm({
         mode: "onBlur",
       });
+
+      const {
+        register: register4,
+        formState: { errors: errors4 },
+        handleSubmit: handleSubmit4,
+      } = useForm({
+        mode: "onBlur",
+      });
     const [conso, setConso] = useState([]);
     const [commune, setCommune] = useState([]);
     const [region, setRegion] = useState([]);
@@ -43,6 +52,7 @@ export default function ConsommationMoyParCommune() {
     const [showAddCommune, setShowAddCommune] = useState(false);
     const [showAddDepartement, setShowAddDepartement] = useState(false);
     const [showAddRegion, setShowAddRegion] = useState(false);
+    const [showAddConso, setShowAddConso] = useState(false);
 
     const [notifMsg, setNotifMsg] = useState(false);
     const [notifMsgError, setNotifMsgError] = useState(false);
@@ -54,6 +64,11 @@ export default function ConsommationMoyParCommune() {
                 console.log("hellooooooooooo");
             }).catch((err)=>{
                 console.log("error get all consoo  ",err);
+            })
+            AnneeService.getAll().then((res)=>{
+              setAnnee(res.data);
+            }).catch((err)=>{
+                console.log("error get annee == ", err);
             })
 
             CommuneService.getAll().then((res)=>{
@@ -81,6 +96,7 @@ export default function ConsommationMoyParCommune() {
        CommuneService.add(data).then((res)=>{
         console.log(data);
             setShowAddCommune(false);
+            window.location.reload();
             setShowNotif(true);
             setMsg("Commune créé avec Succès")
        }).catch((err)=>{
@@ -94,6 +110,7 @@ export default function ConsommationMoyParCommune() {
         DepartementService.add(data).then((res)=>{
             setShowAddDepartement(false);
             setShowNotif(true);
+            window.location.reload();
             setMsg("Département créé avec Succès")
         }).catch((err)=>{
             setShowNotifError(true);
@@ -105,15 +122,97 @@ export default function ConsommationMoyParCommune() {
         regionService.add(data).then((res)=>{
             setShowAddRegion(false);
             setShowNotif(true);
-            setMsg("Région créée avec Succès")
+            window.location.reload();
+            setMsg("Région créée avec Succès");
         }).catch((err)=>{
             setShowNotifError(true);
-            setMsg("Erreur Création Région réessayez SVP")
+            setMsg("Erreur Création Région réessayez SVP", err)
         })
     }
 
+    const onSubmitCons =(data)=>{
+      console.log(data);
+      ConsommationMoyParCommuneService.add(data).then((res)=>{
+        if(res.data === "ok"){
+          console.log(res);
+          setShowAddConso(false);
+          setShowNotif(true);
+          window.location.reload();
+          setMsg("Consommation ajoutée avec Succès");
+        }else{
+          setShowNotifError(true);
+          setMsg("Erreur Ajout Consommation réessayez SVP", res.data);
+
+        }
+
+      }).catch((err)=>{
+        setShowNotifError(true);
+        setMsg("Erreur Ajout Consommation réessayez SVP", err);
+      })
+    }
+
   return (
-    <div className="container mt-3">
+    <div className="marTop">
+
+      {
+        showAddConso && 
+          <div className="container mt-3 card">
+   
+          <h4 className='myFont text-center'>
+               Formulaire : Consommation Moyenne et Vente par commune
+          </h4> 
+          
+       <form onSubmit={handleSubmit4(onSubmitCons)}>
+         <div className="">
+            <div className="col-md-12">
+            <div class="form-group">
+                <label for="niveauTension">Commune :</label>
+                <select id="selectField" name="selectField" className="form-select" {...register4("idCommune")} required >
+               <option>Choisir une Commune</option>
+                 {commune.map((option) => (
+                   <option key={option.id} value={option.id}>{option.nomCommune}</option>
+                 ))}
+               </select>
+              </div>
+          </div>
+          <div className="col-md-12">
+          <div class="form-group">
+                <label for="casNonFournie">Année</label>
+                <select id="selectField" name="selectField" className="form-select" {...register4("idAnnee")} required >
+               <option>Choisir une Année</option>
+                 {annee.map((option) => (
+                   <option key={option.id} value={option.id}>{option.annee}</option>
+                 ))}
+               </select>
+              </div>
+           </div>
+           <div class="form-group col-md-12">
+           <label for="QUANTITE">Consommation (KWH/Client) :</label>
+           <input type="text"
+              class="form-control" 
+              name='quantite' id="quantite" 
+              placeholder="Entrez la quantité" 
+              {...register4("quantite")}
+              required
+              />
+          </div>
+          <div class="form-group col-md-12">
+           <label for="Vente">Vente (KWH) :</label>
+           <input type="text"
+              class="form-control" 
+              name='vente' id="vente" 
+              placeholder="Entrez la vente " 
+              {...register4("vente")}
+              required
+              />
+          </div>
+         </div>
+         <button type="submit" className="myButton mt-3 mb-3">Ajouter</button>
+         <button type="reset" className="otherButton" onClick={()=>{setShowAddConso(false)} }>Annuler</button>
+   
+       </form>
+     </div>
+      }
               {
                   showAddCommune && 
                   <div class="card">
@@ -273,9 +372,9 @@ export default function ConsommationMoyParCommune() {
                 </button>
                 </div>              
               }
-              <h1 className='myFont text-center mt-3 mb-3'>Consommation Moyenne par Commune</h1>
+              <h2 className='myFont text-center mt-3 mb-3'>Consommation Moyenne et Vente par Commune</h2>
               <div>
-                  <button className='myButton mt-3 mb-1'onClick={()=>{Navigate("/addconso")}}><AddCircleOutlineIcon/> Conso</button>
+                  <button className='myButton mt-3 mb-1'onClick={()=>{setShowAddConso(true)}}><AddCircleOutlineIcon/> Conso</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddCommune(true)}><AddCircleOutlineIcon/> Commune</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddDepartement(true)}><AddCircleOutlineIcon/> Département</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddRegion(true)}><AddCircleOutlineIcon/> Région</button>
@@ -287,7 +386,8 @@ export default function ConsommationMoyParCommune() {
                           <th>N°</th>
                           <th>Commune</th>
                           <th>Année</th>
-                          <th>Consommation</th>
+                          <th>Consommation (KWH/Client)</th>
+                          <th>Vente (KWH)</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -296,7 +396,7 @@ export default function ConsommationMoyParCommune() {
                               conso.map((conso,i)=>
                               <tr key={conso.id}>
                                   <td>
-                                      {i}
+                                      {i+1}
                                   </td>
                                   <td>
                                       {conso.nomCommune}
@@ -306,6 +406,9 @@ export default function ConsommationMoyParCommune() {
                                   </td>
                                   <td>
                                       {conso.quantite}
+                                  </td>
+                                  <td>
+                                      {conso.vente}
                                   </td>
                               </tr>
                               )

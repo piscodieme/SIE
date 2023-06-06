@@ -2,7 +2,7 @@ import axios from "axios";
 
 const url = "http://localhost:8080/api/nonfournie/nonfournie";
 
-class NonFournie{
+class NonFournieService{
     getAll(){
         return axios.get(url);
     }
@@ -11,4 +11,4 @@ class NonFournie{
         return axios.post(url,nonFournie);
     }
 }
-export default new NonFournie();
+export default new NonFournieService();

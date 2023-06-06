@@ -56,7 +56,7 @@ export default function AchatEnergieParSenelec (){
     }
     console.log("les aCHAT disponible === ",achat);
         return (
-          <div className="container mt-3">
+          <div className="marTop">
               {
                   showAddSite && 
                   <div class="card">
@@ -128,7 +128,7 @@ export default function AchatEnergieParSenelec (){
                               achat.map((ach,i)=>
                               <tr key={ach.id}>
                                   <td>
-                                      {i}
+                                      {i+1}
                                   </td>
                                   <td>
                                       {ach.unite}

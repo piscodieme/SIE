@@ -1,66 +1,175 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { HistoryRouterProps } from 'react-router-dom';
 import nivtenService from '../Services/NiveauTensionService';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AnneeService from '../Services/AnneeService';
+import { useForm } from 'react-hook-form';
+import EditIcon from '@mui/icons-material/Edit';
 
-class ListVenteNiveauTension extends Component {
 
-    constructor(props){
+function ListVenteNiveauTension () {
+    const [venteNiveauTension, setVenteNiveauTension] = React.useState([]);
+    const [showNiveauTension, setShowNiveauTension] = React.useState(false);
+    const [niveau, setNiveau] = React.useState([]);
+    const [msg, setMsg] = React.useState('');
+    const [notif, setNotif] = React.useState(false);
+    const [notifErreur, setNotifErreur] = React.useState(false);
 
-        super(props);
+    const {register, handleSubmit} = useForm();
+    const [annee, setAnnee] = React.useState([]);
 
-        this.state={
-            venteNiveauTension:[],
-        }
-   
-    }
-
-    componentDidMount(){
-        nivtenService.getAll().then((res)=>{
-            this.setState({venteNiveauTension : res.data});
+    const onSubmit = (data)=>{
+        console.log(data);
+        nivtenService.create(data).then((res)=>{
+            if(res.data === "ok"){
+                setShowNiveauTension(false);
+                setNotif(true);
+                setMsg("Niveau tension ajouté avec succès");
+                window.location.reload();
+            }else{
+                setNotifErreur(true);
+                setMsg("Erreur lors de l'ajout du niveau tension");
+            }
+        }).catch((err)=>{
+            setNotifErreur(true);
+            setMsg("Erreur lors de l'ajout du niveau tension === ",err);
         })
     }
-    AddPage(){
-        this.props.history.push("/addnivtenpage");
-    }
 
-    render() {
-        return (
-            <div>
+    useEffect(()=>{
+        nivtenService.getAll().then((res)=>{
+            console.log("données vente niv ten",res.data);
+            setVenteNiveauTension(res.data);
+        }).catch((err)=>{
+            console.log("error get vente par niveau de tension == ", err);
+        })
+
+        nivtenService.getAllNiveau().then((res)=>{
+            setNiveau(res.data);
+        }).catch((err)=>{
+            console.log("error get niveau de tension == ", err);
+        })
+
+        AnneeService.getAll().then((res)=>{
+            setAnnee(res.data);
+        }).catch((err)=>{
+            console.log("error get annee == ", err);
+        })
+
+    },[])
+    console.log("données vente niv ten",venteNiveauTension);
+    return (
+        <div className='marTop'>
                 <div className='col-sm-12'>
-                    <h2 className='text-center'>Liste des Ventes Par Niveau de Tension</h2>
-                    <Link className='btn btn-primary' to="/addnivtenpage">
-                        Ajouter 
-                    </Link>
+
+                {
+                    notif && 
+                    <div className="alert alert-success"  data-delay="5000">
+                    {msg}
+                    <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setNotif(false)}}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    
+                    }
+                    {
+                    notifErreur && 
+                    <div className="alert alert-danger"  data-delay="5000">
+                    {msg}
+                    <button type="button" class="ml-2 mb-1 close" aria-label="Fermer" onClick={()=>{setNotifErreur(false)}}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>              
+                    }
+
+                    {
+                        showNiveauTension && 
+                        <div className="container mt-3 card">
+   
+                        <h4 className='myFont text-center'>
+                             Formulaire : Vente Energie Par Niveau de Tension
+                        </h4> 
+                        
+                     <form onSubmit={handleSubmit(onSubmit)}>
+                       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 g-3 shadow-lg m-3 p-3 ">
+                          <div className="col-md-6">
+                          <div class="form-group">
+                              <label for="niveauTension">Niveau de Tension :</label>
+                              <select id="selectField" name="selectField" className="form-select" {...register("idNiveau")} required >
+                             <option>Choisir un Niveau</option>
+                               {niveau.map((option) => (
+                                 <option key={option.id} value={option.id}>{option.nomNiveau}</option>
+                               ))}
+                             </select>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                        <div class="form-group">
+                              <label for="casNonFournie">Année</label>
+                              <select id="selectField" name="selectField" className="form-select" {...register("idAnnee")} required >
+                             <option>Choisir une Année</option>
+                               {annee.map((option) => (
+                                 <option key={option.id} value={option.id}>{option.annee}</option>
+                               ))}
+                             </select>
+                            </div>
+                         </div>
+                         <div class="form-group">
+                         <label for="UNITE">Nombre de Client :</label>
+                         <input type="number"
+                            class="form-control" 
+                            name='nbClient' id="nbClient" 
+                            placeholder="Entrez le nombre de client pour ce niveau de tension" 
+                            {...register("nbClient")}
+                            required
+                            />
+                        </div>
+                        <div class="form-group">
+                         <label for="VENTE">Vente :</label>
+                         <input type="text"
+                            class="form-control" 
+                            name='vente' id="vente" 
+                            placeholder="Entrez la Quantité " 
+                            {...register("vente")}
+                            required
+                            />
+                        </div>
+                       </div>
+                       <button type="submit" className="myButton mt-3 mb-3">Ajouter</button>
+                       <button type="reset" className="otherButton" onClick={()=>{setShowNiveauTension(false)} }>Annuler</button>
+                 
+                     </form>
+                   </div>
+                    }
+                    <h2 className='text-center myFont'>Liste des Ventes Par Niveau de Tension</h2>
+                    
+                    <div>
+                        <button className='myButton mt-3 mb-1'onClick={()=>setShowNiveauTension(true)}><AddCircleOutlineIcon/> Vente</button>
+                    </div>
                         <table className='table table-striped table-bordered mt-1'>
                             <thead>
-                                <th>Ventes HT</th>
-                                <th>Ventes MT</th>
-                                <th>Ventes BT</th>
-                                <th>Clients HT</th>
-                                <th>Clients MT</th>
-                                <th>Clients BT</th>
-                                <th>Année</th>
-                                <th>Action</th>
+                                <th className='text-center'>N°</th>
+                                <th className='text-center'>Niveau de Tension</th>
+                                <th className='text-center'>Année</th>
+                                <th className='text-center'> Nombre Clients</th>
+                                <th className='text-center'>Vente</th>
+                                <th className='text-center'>Actions</th>
                             </thead>
                             <tbody className=''>
                                 {
-                                    this.state.venteNiveauTension.map(
-                                        vente => <tr key={vente.id} className='text-center'>
-                                            <td className='text-center'>{vente.venteHT}</td>
-                                            <td className='text-center'>{vente.venteMT}</td>
-                                            <td>{vente.venteBT}</td>
-                                            <td>{vente.clientHT}</td>
-                                            <td>{vente.clientMT}</td>
-                                            <td>{vente.clientBT}</td>
+                                   venteNiveauTension && venteNiveauTension.map(
+                                        (vente,i) => <tr key={vente.id} className='text-center'>
+                                            <td >{i}</td>
+                                            <td className='text-center'>{vente.nomNiveau}</td>
                                             <td>{vente.annee}</td>
+                                            <td>{vente.nbClient}</td>
+                                            <td>{vente.vente}</td>
                                             <td>
-                                                <button className='btn btn-primary UpdateDeleteBtn'>
-                                                    <span class="material-icons-outlined">
-                                                        update
-                                                    </span>
+                                                <button className='action'>
+                                                <i class='bx bxs-edit-alt'></i>
                                                 </button>
-                                                <button className='btn btn-danger UpdateDeleteBtn'>
+                                                <button className='action'>
                                                     <span class="material-icons">
                                                         delete
                                                     </span>
@@ -76,6 +185,6 @@ class ListVenteNiveauTension extends Component {
             </div>
         );
     }
-}
+
 
 export default ListVenteNiveauTension;

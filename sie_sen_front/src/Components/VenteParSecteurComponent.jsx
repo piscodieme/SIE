@@ -59,7 +59,7 @@ export default function VenteParSecteurComponent() {
     console.log("les secteurs dispo  == ",secteur);
     console.log("les annee dispo  == ",annee);
   return (
-    <div className="container mt-3">
+    <div className="marTop">
               {
                   showAddSecteur && 
                   <div class="card">
@@ -129,7 +129,7 @@ export default function VenteParSecteurComponent() {
                               vente.map((vte,i)=>
                               <tr key={vte.id}>
                                   <td>
-                                      {i}
+                                      {i+1}
                                   </td>                                
                                   <td>
                                       {vte.secteur}

@@ -8,8 +8,8 @@ class ConsommationMoyParCommuneService{
         return axios.get(url)
     }
 
-    add(){
-        return axios.post(url)
+    add(cons){
+        return axios.post(url, cons)
     }
 }
 export default new ConsommationMoyParCommuneService()
