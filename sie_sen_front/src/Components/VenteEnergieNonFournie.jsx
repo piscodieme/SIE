@@ -76,6 +76,7 @@ export default function VenteEnergieNonFournie() {
 
   return (
     <div className="marTop">
+      <a href="/electricite"><button className='myButton'> &#8592; Dashboard</button></a>
     {
         showAdd && 
         <div class="card">
@@ -159,10 +160,10 @@ export default function VenteEnergieNonFournie() {
         </div>
        </div>
        <button type="submit" className="myButton mt-3 mb-3">Ajouter</button>
-       <button type="reset" className="btn btn-warning mt-3 ml-3 mb-3" onClick={()=>{setShowAddVente(false)} }>Annuler</button>
+       <button type="reset" className="otherButton" onClick={()=>{setShowAddVente(false)} }>Annuler</button>
  
      </form>
-   </div>
+        </div>
     }
     {
       showNotif && 
@@ -185,9 +186,10 @@ export default function VenteEnergieNonFournie() {
     }
     <h1 className='myFont text-center mt-3 mb-3'>Vente Energie Non Fournie</h1>
     <div>
+      {!showAddVente && 
         <button className='myButton mt-3 mb-1'onClick={()=>setShowAddVente(true)}><AddCircleOutlineIcon/> Vente</button>
+      }
         <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAdd(true)}><AddCircleOutlineIcon/> CAS</button>
-
     </div>
     <table className='table table-stripped table-bordered'>
         <thead className='primary'>

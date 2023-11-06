@@ -35,14 +35,21 @@ export default function LoginComponent() {
                 let prenom = res.data.prenom;
                 let nom = res.data.nom;
                 let role = res.data.role;
+                let sigle = res.data.sigle;
+                let modele = res.data.modele;
+                console.log(modele);
                 setResponse(res.data);
                 localStorage.setItem("userEmail",email)
                 localStorage.setItem("userPrename",prenom)
                 localStorage.setItem("userName",nom)
                 localStorage.setItem("isLogged",true)
                 localStorage.setItem("role",role)
-                Navigate("/electricite");
-                window.location.reload();
+                localStorage.setItem("sigle",sigle)
+                localStorage.setItem("modele",modele)
+                if(modele == 2){
+                    Navigate("/electricite");
+                   // window.location.reload();
+                }
             }
             else{
                 setResponse(res.data);

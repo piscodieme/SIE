@@ -22,6 +22,10 @@ import ConsommationMoyParCommune from './Components/ConsommationMoyParCommune';
 import VenteEnergieNonFournie from './Components/VenteEnergieNonFournie';
 import Header from './Components/Header';
 import Homepage from './Components/Homepage';
+import HomeIndustrie from './Components/Industrie/HomeIndustrie';
+import HomeHydrocarbure from './Components/Hydrocarbure/HomeHydrocarbure';
+import Presentation from './Components/Presentation';
+import Rapports from './Components/Rapports';
 
 function App() {
   const [isLogged, setIsLogged]=useState(false);
@@ -58,10 +62,14 @@ function App() {
                       <Route path='/addventesecteur'  element={<AddVenteParSecteurFormComponent />}></Route>
                       <Route path='/consomoy'  element={<ConsommationMoyParCommune />}></Route>
                       <Route path='/ventenf'  element={<VenteEnergieNonFournie />}></Route>
+                      <Route path='/industrie'  element={<HomeIndustrie />}></Route>
+                      <Route path='/hydrocarbure'  element={<HomeHydrocarbure />}></Route>
 
                       
                   </Route>
-                  
+                  <Route path='/presentation'  element={<Presentation />}></Route>
+                  <Route path='/rapports'  element={<Rapports />}></Route>
+
                 </Routes>
                 
               </div>

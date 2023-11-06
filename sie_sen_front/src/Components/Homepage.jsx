@@ -2,6 +2,12 @@ import React, { Component, useState } from 'react';
 import LoginComponent from './LoginComponent';
 import { useNavigate } from 'react-router-dom';
 import UsersService from '../Services/UsersService';
+import image1 from "./../images/industrial-refinery-tower-petroleum.jpg"
+import image2 from "./../images/istockphoto-928380174-612x612.jpg"
+import image3 from "./../images/maroc_energies_propres.jpg"
+import image4 from "./../images/image.jpg"
+import image5 from "./../images/petrole-plateforme-Hibernia.jpg"
+import image6 from "./../images/bg2.jpg"
 
 function Homepage () {
    const [showlog, setShowlog] = useState(false);
@@ -34,14 +40,32 @@ function Homepage () {
                 let prenom = res.data.prenom;
                 let nom = res.data.nom;
                 let role = res.data.role;
+                let sigle = res.data.sigle;
+                let modele = res.data.modele;
                 setResponse(res.data);
                 localStorage.setItem("userEmail",email)
                 localStorage.setItem("userPrename",prenom)
                 localStorage.setItem("userName",nom)
                 localStorage.setItem("isLogged",true)
                 localStorage.setItem("role",role)
-                Navigate("/electricite");
-                window.location.reload();
+                localStorage.setItem("sigle",sigle)
+                localStorage.setItem("modele",modele)
+
+                if(modele == 1){
+                    Navigate("/electricite");
+                    window.location.reload();
+                }else{
+                    if(modele == 2){
+                        Navigate("/industrie");
+                        window.location.reload();
+                    }else{
+                        if(modele == 3){
+                            Navigate("/hydrocarbure");
+                            window.location.reload();  
+                        }
+                    }
+                }
+                
             }
             else{
                 setResponse(res.data);
@@ -59,7 +83,7 @@ function Homepage () {
                 <section class="home">
                 
                     <div class="home-content">
-                        <h1>Système d'Information Energétique Sénégalais</h1>
+                        <h1>Système d'information énergétique-Sénégal (SIES)</h1>
                         
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                             Suscipit sint temporibus veniam laboriosam pariatur quis
@@ -72,6 +96,7 @@ function Homepage () {
                     </div>
                     {
                   showlog && <div className='loginDesign'>
+                    <h1>Connexion au SIE</h1>
                     <form>
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <h3 class="lead fw-normal me-3 mb-3 deco">Utilisez votre Email et Mot de passe</h3 >
@@ -124,13 +149,21 @@ function Homepage () {
 
                   </div>
                 }
-                    <div class="rs">
-                        <a href="#"><i class='bx bxl-linkedin'></i></a>
-                        <a href="#"><i class='bx bxl-facebook'></i></a>
-                        <a href="#"><i class='bx bxl-twitter' ></i></a>
-                        <a href="#"><i class='bx bxl-instagram-alt' ></i></a>
-                        <a href="#"><i class='bx bxl-snapchat' ></i></a>
+                {
+                    !showlog && <div className='loginDesign' /* Style="marginTop:10%; width:70%; height: 70%;" */>
+                    <div class="box">
+                            <span Style="--i:1"><img src={image1} alt=""/></span>
+                            <span Style="--i:2"><img src={image2} alt=""/></span>
+                            <span Style="--i:3"><img src={image3} alt=""/></span>
+                            <span Style="--i:4"><img src={image4} alt=""/></span>
+                            <span Style="--i:5"><img src={image5} alt=""/></span>
+                            <span Style="--i:6"><img src={image6} alt=""/></span>
+                            <span Style="--i:7"><img src={image3} alt=""/></span>
+                            <span Style="--i:7"><img src={image5} alt=""/></span>
+                        </div>
+
                     </div>
+                }
                 </section>
             </div>
         );

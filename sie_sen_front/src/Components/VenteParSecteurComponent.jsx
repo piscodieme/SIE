@@ -18,6 +18,15 @@ export default function VenteParSecteurComponent() {
     const [secteur,setSecteur] = useState([]);
     const [annee,setAnnee] = useState([]);
 
+      /* pagination */
+      const [currentPage , setCurrentPage] = useState(1);
+      const lineParPage = 5;
+      const dernierIndex = currentPage * lineParPage;
+      const premierIndex = dernierIndex - lineParPage;
+      const line = vente.slice(premierIndex, dernierIndex);
+      const npage = Math.ceil(vente.length / lineParPage);
+      const numbers = [...Array(npage + 1).keys()].slice(1);
+
     const {register, handleSubmit} = useForm();
 
     useEffect(()=>{
@@ -60,6 +69,7 @@ export default function VenteParSecteurComponent() {
     console.log("les annee dispo  == ",annee);
   return (
     <div className="marTop">
+              <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>
               {
                   showAddSecteur && 
                   <div class="card">
@@ -107,7 +117,7 @@ export default function VenteParSecteurComponent() {
                 </button>
                 </div>              
               }
-              <h1 className='myFont text-center mt-3 mb-3'>Vente par Secteur</h1>
+              <h1 className='myFont text-center mt-3 mb-3'>Ventes par secteur</h1>
               <div>
                   <button className='myButton mt-3 mb-1'onClick={()=>{Navigate("/addventesecteur")}}>Ajouter une Vente</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddSecteur(true)}>Ajouter Secteur</button>
@@ -121,12 +131,13 @@ export default function VenteParSecteurComponent() {
                           <th>Année</th>
                           <th>Vente</th>
                           <th>Unité</th>
+                          <th>Actions</th>
                       </tr>
                   </thead>
                   <tbody>
                       
                           {
-                              vente.map((vte,i)=>
+                              line && line.map((vte,i)=>
                               <tr key={vte.id}>
                                   <td>
                                       {i+1}
@@ -143,6 +154,18 @@ export default function VenteParSecteurComponent() {
                                   <td>
                                       {vte.unite}
                                   </td>
+                                  <td>
+                                    <button className='action'>
+                                        <span class="material-icons">
+                                            edit
+                                        </span>
+                                    </button>
+                                    <button className='action'>
+                                        <span class="material-icons">
+                                            delete
+                                        </span>
+                                    </button>
+                                </td>
                               </tr>
                               )
                           }
@@ -150,6 +173,37 @@ export default function VenteParSecteurComponent() {
                       
                   </tbody>
               </table>
+              <nav className='pagi'>
+                            <ul className='pagination'>
+                                <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={prevPage}>Précédent</a>
+                                </li>
+                                {
+                                    numbers.map((n,i)=>(
+                                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                                            <a href="#" className='page-link pagi'
+                                            onClick={()=>changePage(n)}>{n}</a>
+                                        </li>
+                                    ))
+                                }
+                                 <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={nextPage}>Suivant</a>
+                                </li>
+                            </ul>    
+                        </nav> 
           </div>
   )
+    function nextPage(){
+    if(currentPage < dernierIndex /* && currentPage !== numbers[numbers.length -1] */){
+        setCurrentPage(currentPage + 1);
+    }
+    }
+    function prevPage(){
+        if(currentPage !== premierIndex /* && currentPage !== 1 */){
+            setCurrentPage(currentPage - 1);
+        }
+    }
+    function changePage(n){
+        setCurrentPage(n);
+    }
 }

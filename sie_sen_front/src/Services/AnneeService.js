@@ -7,5 +7,9 @@ class AnneeService {
     getAll(){
        return axios.get(AnneeApiUrl);
     }
+
+    getAnneeActu(){
+        return axios.get(AnneeApiUrl)
+    }
 }
 export default new AnneeService()

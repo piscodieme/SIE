@@ -1,0 +1,15 @@
+use uemoa;
+create VIEW vente_par_usage_view as 
+select u.nomUsage,t.annee,p.nom_pays,a.SIGLE,v.VENTE_CN,v.CLIENTELE_CN
+from dim_usage u, dim_temps t, dim_pays p, dim_acteur a, vente_par_usage v
+where v.ID_ACTEUR = a.ID and v.id_annee = t.id and v.id_usage = u.id and v.CODE_PAYS = p.code_pays;
+
+create VIEW vente_par_secteur_view as 
+select u.secteur,t.annee,p.nom_pays,a.SIGLE,v.VENTE
+from dim_secteur_activite u, dim_temps t, dim_pays p, dim_acteur a, ventes_par_secteur v
+where v.ID_ACTEUR = a.ID and v.id_annee = t.id and v.id_secteur = u.id and v.CODE_PAYS = p.code_pays;
+
+create VIEW vente_electricite_view as 
+select t.annee,p.nom_pays,a.SIGLE,v.VENDUE,v.FOURNIE
+from dim_temps t, dim_pays p, dim_acteur a, vente_electricite v
+where v.ID_ACTEUR = a.ID and v.id_annee = t.id and v.CODE_PAYS = p.code_pays;

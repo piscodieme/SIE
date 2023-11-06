@@ -17,6 +17,15 @@ function ListVenteUsage() {
     const [msg, setMsg] = useState("");
     /* to be continued */
 
+     /* pagination */
+     const [currentPage , setCurrentPage] = useState(1);
+     const lineParPage = 5;
+     const dernierIndex = currentPage * lineParPage;
+     const premierIndex = dernierIndex - lineParPage;
+     const line = venteUsage.slice(premierIndex, dernierIndex);
+     const npage = Math.ceil(venteUsage.length / lineParPage);
+     const numbers = [...Array(npage + 1).keys()].slice(1);
+
     const {
         register,
         formState: { errors },
@@ -74,11 +83,13 @@ function ListVenteUsage() {
 console.log("les usages === ",usages);
         return (
             <div className='marTop'>
+            <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>
+
                 { showAddVente && 
                 <div className="container mt-3 card">
    
                 <h4 className='myFont text-center'>
-                     Formulaire : Vente par Usage
+                    Ajout Ventes et clientèle par Usage
                 </h4> 
                 
              <form onSubmit={handleSubmit(onSubmit)}>
@@ -134,9 +145,12 @@ console.log("les usages === ",usages);
 
                 }
                 <div className='col-sm-12'>
-                    <h2 className='text-center myFont'>Ventes Et Clientèle Par Usage</h2>
+                    <h2 className='text-center myFont'>Ventes et clientèle par usage</h2>
                     <div>
+                        {
+                            !showAddVente && 
                     <button className='myButton mt-3 mb-1'onClick={()=>{setShowAddVente(true)}}><AddCircleOutlineIcon/> Vente </button>
+                        }
                     <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowusage(true)}><AddCircleOutlineIcon/> Usage </button>
                   
                     </div>
@@ -151,7 +165,7 @@ console.log("les usages === ",usages);
                             </thead>
                             <tbody className=''>
                                 {
-                                   venteUsage && venteUsage.map(
+                                   line && line.map(
                                         (vente,i) => <tr key={i+1} className='text-center'>
                                             <td>{i+1}</td>
                                             <td className='text-center'>{vente.annee}</td>
@@ -159,12 +173,12 @@ console.log("les usages === ",usages);
                                             <td className='text-center'>{vente.quantite}</td>
                                             <td className='text-center'>{vente.nbClient}</td>
                                             <td>
-                                                <button className='btn btn-primary UpdateDeleteBtn'>
-                                                    <span class="material-icons-outlined">
-                                                        update
-                                                    </span>
+                                                <button className='action'>
+                                                <span class="material-icons">
+                                                    edit
+                                                </span>
                                                 </button>
-                                                <button className='btn btn-danger UpdateDeleteBtn'>
+                                                <button className='action'>
                                                     <span class="material-icons">
                                                         delete
                                                     </span>
@@ -176,8 +190,39 @@ console.log("les usages === ",usages);
                                 }
                             </tbody>
                         </table>
+                        <nav className='pagi'>
+                            <ul className='pagination'>
+                                <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={prevPage}>Précédent</a>
+                                </li>
+                                {
+                                    numbers.map((n,i)=>(
+                                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                                            <a href="#" className='page-link pagi'
+                                            onClick={()=>changePage(n)}>{n}</a>
+                                        </li>
+                                    ))
+                                }
+                                 <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={nextPage}>Suivant</a>
+                                </li>
+                            </ul>    
+                        </nav> 
                 </div>
             </div>
         );
+        function nextPage(){
+            if(currentPage < dernierIndex /* && currentPage !== numbers[numbers.length -1] */){
+                setCurrentPage(currentPage + 1);
+            }
+        }
+        function prevPage(){
+            if(currentPage !== premierIndex /* && currentPage !== 1 */){
+                setCurrentPage(currentPage - 1);
+            }
+        }
+        function changePage(n){
+            setCurrentPage(n);
+        }
     }
 export default ListVenteUsage;

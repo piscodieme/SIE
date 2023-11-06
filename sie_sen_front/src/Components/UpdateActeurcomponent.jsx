@@ -69,8 +69,9 @@ function UpdateActeurcomponent () {
 
     
         return (
-            <div>
-                
+            <div className='marTop'>
+            <a href="/electricite"><button className='myButton'> &#8592; Dashboard</button></a>
+
                 <div className='row mt-3'>
                     <div className='col-sm-8 container'>
                         <h2 className='text-center'>Ajout Acteur</h2>

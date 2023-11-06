@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HistoryRouterProps } from 'react-router-dom';
 import nivtenService from '../Services/NiveauTensionService';
@@ -6,6 +6,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import AnneeService from '../Services/AnneeService';
 import { useForm } from 'react-hook-form';
 import EditIcon from '@mui/icons-material/Edit';
+import { FirstPage } from '@mui/icons-material';
 
 
 function ListVenteNiveauTension () {
@@ -18,6 +19,17 @@ function ListVenteNiveauTension () {
 
     const {register, handleSubmit} = useForm();
     const [annee, setAnnee] = React.useState([]);
+
+    /* pagination */
+    const [currentPage , setCurrentPage] = useState(1);
+    const lineParPage = 5;
+    const dernierIndex = currentPage * lineParPage;
+    const premierIndex = dernierIndex - lineParPage;
+    const line = venteNiveauTension.slice(premierIndex, dernierIndex);
+    const npage = Math.ceil(venteNiveauTension.length / lineParPage);
+    const numbers = [...Array(npage + 1).keys()].slice(1);
+
+
 
     const onSubmit = (data)=>{
         console.log(data);
@@ -61,6 +73,7 @@ function ListVenteNiveauTension () {
     console.log("données vente niv ten",venteNiveauTension);
     return (
         <div className='marTop'>
+                <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>
                 <div className='col-sm-12'>
 
                 {
@@ -88,7 +101,7 @@ function ListVenteNiveauTension () {
                         <div className="container mt-3 card">
    
                         <h4 className='myFont text-center'>
-                             Formulaire : Vente Energie Par Niveau de Tension
+                            Vente Energie Par Niveau de Tension
                         </h4> 
                         
                      <form onSubmit={handleSubmit(onSubmit)}>
@@ -126,7 +139,7 @@ function ListVenteNiveauTension () {
                             />
                         </div>
                         <div class="form-group">
-                         <label for="VENTE">Vente :</label>
+                         <label for="VENTE">Vente (GWH) :</label>
                          <input type="text"
                             class="form-control" 
                             name='vente' id="vente" 
@@ -142,32 +155,35 @@ function ListVenteNiveauTension () {
                      </form>
                    </div>
                     }
-                    <h2 className='text-center myFont'>Liste des Ventes Par Niveau de Tension</h2>
-                    
+                    <h2 className='text-center myFont'>Ventes par niveau de tension</h2>
+                    {!showNiveauTension &&
                     <div>
-                        <button className='myButton mt-3 mb-1'onClick={()=>setShowNiveauTension(true)}><AddCircleOutlineIcon/> Vente</button>
+                        <button className='myButton mt-3 mb-1'onClick={()=>setShowNiveauTension(true)}>Ajouter</button>
                     </div>
+                    }
                         <table className='table table-striped table-bordered mt-1'>
                             <thead>
                                 <th className='text-center'>N°</th>
                                 <th className='text-center'>Niveau de Tension</th>
                                 <th className='text-center'>Année</th>
                                 <th className='text-center'> Nombre Clients</th>
-                                <th className='text-center'>Vente</th>
+                                <th className='text-center'>Vente(GWH)</th>
                                 <th className='text-center'>Actions</th>
                             </thead>
                             <tbody className=''>
                                 {
-                                   venteNiveauTension && venteNiveauTension.map(
-                                        (vente,i) => <tr key={vente.id} className='text-center'>
-                                            <td >{i}</td>
+                                   line && line.map(
+                                        (vente,i) => <tr key={vente.id} className='text-center paddCell'>
+                                            <td >{i+1}</td>
                                             <td className='text-center'>{vente.nomNiveau}</td>
                                             <td>{vente.annee}</td>
                                             <td>{vente.nbClient}</td>
                                             <td>{vente.vente}</td>
                                             <td>
                                                 <button className='action'>
-                                                <i class='bx bxs-edit-alt'></i>
+                                                    <span class="material-icons">
+                                                        edit
+                                                    </span>
                                                 </button>
                                                 <button className='action'>
                                                     <span class="material-icons">
@@ -181,9 +197,40 @@ function ListVenteNiveauTension () {
                                 }
                             </tbody>
                         </table>
+                        <nav className='pagi'>
+                            <ul className='pagination'>
+                                <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={prevPage}>Précédent</a>
+                                </li>
+                                {
+                                    numbers.map((n,i)=>(
+                                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                                            <a href="#" className='page-link pagi'
+                                            onClick={()=>changePage(n)}>{n}</a>
+                                        </li>
+                                    ))
+                                }
+                                 <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={nextPage}>Suivant</a>
+                                </li>
+                            </ul>    
+                        </nav> 
                 </div>
             </div>
         );
+        function nextPage(){
+            if(currentPage < dernierIndex /* && currentPage !== numbers[numbers.length -1] */){
+                setCurrentPage(currentPage + 1);
+            }
+        }
+        function prevPage(){
+            if(currentPage !== premierIndex /* && currentPage !== 1 */){
+                setCurrentPage(currentPage - 1);
+            }
+        }
+        function changePage(n){
+            setCurrentPage(n);
+        }
     }
 
 

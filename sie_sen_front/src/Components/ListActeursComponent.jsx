@@ -76,10 +76,10 @@ function ListActeursComponent () {
 
         return (
             <div className='marTop'>
-                
+                <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>  
                 <div className='row mt-3'>
                     <div className='col-sm-8'>
-                    <h2 className='text-center myFont'>Liste des Acteurs</h2>
+                    <h2 className='text-center myFont'>Liste des acteurs</h2>
 
                         <table className='table table-striped table-bordered mt-3'>
                             <thead>
@@ -96,12 +96,22 @@ function ListActeursComponent () {
                                             <td>{acteurs.libelle}</td>
                                             <td>{acteurs.description}</td>
                                             <td>
-                                                <button className='btn btn-primary m-1 updateHover' onClick={()=>updateActor(acteurs.id)}>
+                                                {/* <button className='btn btn-primary m-1 updateHover' onClick={()=>updateActor(acteurs.id)}>
                                                     <span class="material-icons-outlined">
                                                         update
                                                     </span>
                                                 </button>
                                                 <button className='btn btn-danger' onClick={()=>deleteActor(acteurs.id)}>
+                                                    <span class="material-icons">
+                                                        delete
+                                                    </span>
+                                                </button> */}
+                                                <button className='action' onClick={()=>updateActor(acteurs.id)}>
+                                                    <span class="material-icons">
+                                                        edit
+                                                    </span>
+                                                </button>
+                                                <button className='action' onClick={()=>deleteActor(acteurs.id)}>
                                                     <span class="material-icons">
                                                         delete
                                                     </span>

@@ -103,7 +103,7 @@ export default function MenageElecZrFrom() {
  console.log("Niou xoll",Params.id);
 
   return (
-    <div className="container mt-3">
+    <div className="container marTop">
     <h4 className='text-center mb-3 myFont'>Formulaire : Nombre de Ménages électrifié en Zone {Params.id}</h4>
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
@@ -131,8 +131,8 @@ export default function MenageElecZrFrom() {
           </div>
         ))}
       </div>
-      <button type="submit" className="btn btn-primary mt-3 mb-3">Envoyer</button>
-      <button type="reset" className="btn btn-warning mt-3 ml-3 mb-3">Annuler</button>
+      <button type="submit" className="myButton mt-2">Envoyer</button>
+      <button type="reset" className="otherButton mt-2">Annuler</button>
 
     </form>
   </div>

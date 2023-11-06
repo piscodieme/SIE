@@ -20,6 +20,16 @@ export default function AchatEnergieParSenelec (){
     const [showEditAchat, setShowEditAchat] = useState(false);
     const [msg, setMsg] = useState({});
     const [showNotif,setShowNotif] = useState(false);
+
+    /* pagination */
+    const [currentPage , setCurrentPage] = useState(1);
+    const lineParPage = 5;
+    const dernierIndex = currentPage * lineParPage;
+    const premierIndex = dernierIndex - lineParPage;
+    const line = achat.slice(premierIndex, dernierIndex);
+    const npage = Math.ceil(achat.length / lineParPage);
+    const numbers = [...Array(npage + 1).keys()].slice(1);
+
     useEffect(()=>{
         AchatEnergieParSenelecService.getAll().then((res)=>{
             let data = res.data;
@@ -57,6 +67,8 @@ export default function AchatEnergieParSenelec (){
     console.log("les aCHAT disponible === ",achat);
         return (
           <div className="marTop">
+            <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>
+
               {
                   showAddSite && 
                   <div class="card">
@@ -120,12 +132,13 @@ export default function AchatEnergieParSenelec (){
                           <th>Site de Production</th>
                           <th>Année</th>
                           <th>Achat</th>
+                          <th>Actions</th>
                       </tr>
                   </thead>
                   <tbody>
                       
                           {
-                              achat.map((ach,i)=>
+                              line && line.map((ach,i)=>
                               <tr key={ach.id}>
                                   <td>
                                       {i+1}
@@ -142,6 +155,18 @@ export default function AchatEnergieParSenelec (){
                                   <td>
                                       {ach.quantite}
                                   </td>
+                                  <td>
+                                    <button className='action'>
+                                        <span class="material-icons">
+                                            edit
+                                        </span>
+                                    </button>
+                                    <button className='action'>
+                                        <span class="material-icons">
+                                            delete
+                                        </span>
+                                    </button>
+                                </td>
                               </tr>
                               )
                           }
@@ -149,6 +174,37 @@ export default function AchatEnergieParSenelec (){
                       
                   </tbody>
               </table>
+              <nav className='pagi'>
+                            <ul className='pagination'>
+                                <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={prevPage}>Précédent</a>
+                                </li>
+                                {
+                                    numbers.map((n,i)=>(
+                                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                                            <a href="#" className='page-link pagi'
+                                            onClick={()=>changePage(n)}>{n}</a>
+                                        </li>
+                                    ))
+                                }
+                                 <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={nextPage}>Suivant</a>
+                                </li>
+                            </ul>    
+                        </nav> 
           </div>
         )
+        function nextPage(){
+            if(currentPage < dernierIndex /* && currentPage !== numbers[numbers.length -1] */){
+                setCurrentPage(currentPage + 1);
+            }
+        }
+        function prevPage(){
+            if(currentPage !== premierIndex /* && currentPage !== 1 */){
+                setCurrentPage(currentPage - 1);
+            }
+        }
+        function changePage(n){
+            setCurrentPage(n);
+        }
 }

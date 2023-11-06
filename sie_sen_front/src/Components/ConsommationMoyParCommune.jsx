@@ -57,6 +57,15 @@ export default function ConsommationMoyParCommune() {
     const [notifMsg, setNotifMsg] = useState(false);
     const [notifMsgError, setNotifMsgError] = useState(false);
 
+    /* pagination */
+    const [currentPage , setCurrentPage] = useState(1);
+    const lineParPage = 5;
+    const dernierIndex = currentPage * lineParPage;
+    const premierIndex = dernierIndex - lineParPage;
+    const line = conso.slice(premierIndex, dernierIndex);
+    const npage = Math.ceil(conso.length / lineParPage);
+    const numbers = [...Array(npage + 1).keys()].slice(1);
+
         useEffect(()=>{
 
             ConsommationMoyParCommuneService.getAll().then((res)=>{
@@ -153,13 +162,13 @@ export default function ConsommationMoyParCommune() {
 
   return (
     <div className="marTop">
-
+      <a href="/electricite"><button className='myButton'> &#8592; Menu principal</button></a>
       {
         showAddConso && 
           <div className="container mt-3 card">
    
           <h4 className='myFont text-center'>
-               Formulaire : Consommation Moyenne et Vente par commune
+               Ajout consommation moyenne et vente par commune
           </h4> 
           
        <form onSubmit={handleSubmit4(onSubmitCons)}>
@@ -168,7 +177,7 @@ export default function ConsommationMoyParCommune() {
             <div class="form-group">
                 <label for="niveauTension">Commune :</label>
                 <select id="selectField" name="selectField" className="form-select" {...register4("idCommune")} required >
-               <option>Choisir une Commune</option>
+               <option>Choisir une commune</option>
                  {commune.map((option) => (
                    <option key={option.id} value={option.id}>{option.nomCommune}</option>
                  ))}
@@ -372,9 +381,11 @@ export default function ConsommationMoyParCommune() {
                 </button>
                 </div>              
               }
-              <h2 className='myFont text-center mt-3 mb-3'>Consommation Moyenne et Vente par Commune</h2>
+              <h2 className='myFont text-center mt-3 mb-3'>Consommation moyenne et vente par commune</h2>
               <div>
-                  <button className='myButton mt-3 mb-1'onClick={()=>{setShowAddConso(true)}}><AddCircleOutlineIcon/> Conso</button>
+                {!showAddConso &&
+                  <button className='myButton mt-3 mb-1'onClick={()=>{setShowAddConso(true)}}> Ajouter</button>
+                }
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddCommune(true)}><AddCircleOutlineIcon/> Commune</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddDepartement(true)}><AddCircleOutlineIcon/> Département</button>
                   <button className='myButton mt-3 mb-1' Style='float:right' onClick={()=>setShowAddRegion(true)}><AddCircleOutlineIcon/> Région</button>
@@ -388,12 +399,13 @@ export default function ConsommationMoyParCommune() {
                           <th>Année</th>
                           <th>Consommation (KWH/Client)</th>
                           <th>Vente (KWH)</th>
+                          <th>Actions</th>
                       </tr>
                   </thead>
                   <tbody>
                       
                           {
-                              conso.map((conso,i)=>
+                              line && line.map((conso,i)=>
                               <tr key={conso.id}>
                                   <td>
                                       {i+1}
@@ -410,6 +422,18 @@ export default function ConsommationMoyParCommune() {
                                   <td>
                                       {conso.vente}
                                   </td>
+                                  <td>
+                                    <button className='action'>
+                                    <span class="material-icons">
+                                          edit
+                                      </span>
+                                    </button>
+                                    <button className='action'>
+                                      <span class="material-icons">
+                                          delete
+                                      </span>
+                                    </button>
+                                  </td>
                               </tr>
                               )
                           }
@@ -417,6 +441,37 @@ export default function ConsommationMoyParCommune() {
                       
                   </tbody>
               </table>
+              <nav className='pagi'>
+                            <ul className='pagination'>
+                                <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={prevPage}>Précédent</a>
+                                </li>
+                                {
+                                    numbers.map((n,i)=>(
+                                        <li className={`page-item ${currentPage === n ? 'active' : ''}`} key={i}>
+                                            <a href="#" className='page-link pagi'
+                                            onClick={()=>changePage(n)}>{n}</a>
+                                        </li>
+                                    ))
+                                }
+                                 <li className='page-item'>
+                                    <a href="#" className='page-link' onClick={nextPage}>Suivant</a>
+                                </li>
+                            </ul>    
+                        </nav> 
           </div>
   )
+  function nextPage(){
+    if(currentPage < dernierIndex /* && currentPage !== numbers[numbers.length -1] */){
+        setCurrentPage(currentPage + 1);
+    }
+}
+function prevPage(){
+    if(currentPage !== premierIndex /* && currentPage !== 1 */){
+        setCurrentPage(currentPage - 1);
+    }
+}
+function changePage(n){
+    setCurrentPage(n);
+}
 }
