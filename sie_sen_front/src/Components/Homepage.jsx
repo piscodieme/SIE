@@ -1,13 +1,10 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import LoginComponent from './LoginComponent';
 import { useNavigate } from 'react-router-dom';
 import UsersService from '../Services/UsersService';
-import image1 from "./../images/industrial-refinery-tower-petroleum.jpg"
-import image2 from "./../images/istockphoto-928380174-612x612.jpg"
-import image3 from "./../images/maroc_energies_propres.jpg"
-import image4 from "./../images/image.jpg"
-import image5 from "./../images/petrole-plateforme-Hibernia.jpg"
-import image6 from "./../images/bg2.jpg"
+import Dw_bilanService from '../Services/Dw_bilanService';
+import VueBilanService from '../Services/VueBilanService';
+import { Card, Metric, Text, AreaChart, Title,BarChart, LineChart, DonutChart } from "@tremor/react";
 
 function Homepage () {
    const [showlog, setShowlog] = useState(false);
@@ -16,6 +13,82 @@ function Homepage () {
     const [errorPopUp, setErrorPopUp] = useState(false);
     const [response , setResponse] = useState('');
     const Navigate = useNavigate();
+    const [dw_bilan, setDw_bilan] = useState([])
+    const [vuebilan, setVuebilan] = useState([])
+    const [vuebilanSomme, setVuebilanSomme] = useState([])
+    const [approv, setApprov] = useState([])
+    const [trans, setTrans] = useState([])
+    const [elecProd, setElecProd] = useState([])
+    const [uemoaColor, setUemoaColor] = useState(true)
+    const [senegalColor, setSenegalColor] = useState(false)
+    const [guineeColor, setGuineeColor] = useState(false)
+    const [beninColor, setBeninColor] = useState(false)
+
+    const [zone, setZone] = useState("UEMOA")
+
+
+    useEffect(()=>{
+/* 
+        fetch("http://localhost:8080/a/c/c",
+        {
+            method:"GET",
+            headers:{ 
+                "Accept":"application/json"
+            }
+        }).then(res =>{
+            res.json().then(json =>{
+                console.log("response ====",json)
+            });
+        }); */
+
+        Dw_bilanService.getAll().then((res)=>{
+            console.log(res)
+            setDw_bilan(res)
+            console.log("data dw bilan ==== ",dw_bilan)
+        }).catch((err)=>{
+            console.log("erroor get All data warehouse",err)
+        })
+
+        VueBilanService.getAll().then((res)=>{
+            console.log(res)
+            setVuebilan(res.data)
+            console.log("data vue bilan ==== ",vuebilan)
+        }).catch((err)=>{
+            console.log("error get view data warehouse")
+        })
+
+        VueBilanService.getAllSomme(zone).then((res)=>{
+            console.log(res.data)
+            setVuebilanSomme(res.data)
+            console.log("data vue bilan ==== ",vuebilanSomme)
+        }).catch((err)=>{
+            console.log("error get consommation finale",err)
+        })
+
+        VueBilanService.getAllApprov(zone).then((res)=>{
+            console.log(res.data)
+            setApprov(res.data)
+            console.log("data vue bilan ==== ",approv)
+        }).catch((err)=>{
+            console.log("error get approvisionnement interieur ", err)
+        })
+
+        VueBilanService.getAllTrans(zone).then((res)=>{
+            console.log(res.data)
+            setTrans(res.data)
+            console.log("data vue bilan ==== ",trans)
+        }).catch((err)=>{
+            console.log("error get transformation ", err)
+        })
+
+        VueBilanService.getAllProdEner(zone).then((res)=>{
+            console.log(res.data)
+            setElecProd(res.data)
+            console.log("data vue bilan ==== ",elecProd)
+        }).catch((err)=>{
+            console.log("error get transformation ", err)
+        })
+    },[])
    
 
     const handleChangeEmail = (e) =>{
@@ -28,143 +101,167 @@ function Homepage () {
         setErrorPopUp(false);
     }
 
-    const login = () =>{
-        console.log("email ===",email);
-        console.log("password ===",password);
-        let user = {email:email, password:password};
+      
+      const valueFormatter = function(number) {
+        return new Intl.NumberFormat("us").format(number).toString() + "K";
+      };
 
-        UsersService.login(user).then((res)=>{
-            console.log("login response ======  ",res);
-            if(res.data.status === 'ok'){
-                let email = res.data.email;
-                let prenom = res.data.prenom;
-                let nom = res.data.nom;
-                let role = res.data.role;
-                let sigle = res.data.sigle;
-                let modele = res.data.modele;
-                setResponse(res.data);
-                localStorage.setItem("userEmail",email)
-                localStorage.setItem("userPrename",prenom)
-                localStorage.setItem("userName",nom)
-                localStorage.setItem("isLogged",true)
-                localStorage.setItem("role",role)
-                localStorage.setItem("sigle",sigle)
-                localStorage.setItem("modele",modele)
+    const getDataByCountry = (country)=>{
+        setZone(country);
+        if(country === "SEN"){
+            setSenegalColor(true);
+            setUemoaColor(false);
+            setBeninColor(false);
+            setGuineeColor(false);
+        }
+        if(country === "BEN"){
+            setSenegalColor(false);
+            setUemoaColor(false);
+            setBeninColor(true);
+            setGuineeColor(false);
+        }
+        if(country === "GUI"){
+            setSenegalColor(false);
+            setUemoaColor(false);
+            setBeninColor(false);
+            setGuineeColor(true);
+        }
+        if(country === "UEMOA"){
+            setSenegalColor(false);
+            setUemoaColor(true);
+            setBeninColor(false);
+            setGuineeColor(false);
+        }
 
-                if(modele == 1){
-                    Navigate("/electricite");
-                    window.location.reload();
-                }else{
-                    if(modele == 2){
-                        Navigate("/industrie");
-                        window.location.reload();
-                    }else{
-                        if(modele == 3){
-                            Navigate("/hydrocarbure");
-                            window.location.reload();  
-                        }
-                    }
-                }
-                
-            }
-            else{
-                setResponse(res.data);
-                setErrorPopUp(true);
-                Navigate("/");
-                
-            }
+        VueBilanService.getAllSomme(zone).then((res)=>{
+            console.log(res.data)
+            setVuebilanSomme(res.data)
+            console.log("data vue bilan ==== ",vuebilanSomme)
+        }).catch((err)=>{
+            console.log("error get consommation finale",err)
         })
-    }
+
+        VueBilanService.getAllApprov(zone).then((res)=>{
+            console.log(res.data)
+            setApprov(res.data)
+            console.log("data vue bilan ==== ",approv)
+        }).catch((err)=>{
+            console.log("error get approvisionnement interieur ", err)
+        })
+
+        VueBilanService.getAllTrans(zone).then((res)=>{
+            console.log(res.data)
+            setTrans(res.data)
+            console.log("data vue bilan ==== ",trans)
+        }).catch((err)=>{
+            console.log("error get transformation ", err)
+        })
+
+        VueBilanService.getAllProdEner(zone).then((res)=>{
+            console.log(res.data)
+            setElecProd(res.data)
+            console.log("data vue bilan ==== ",elecProd)
+        }).catch((err)=>{
+            console.log("error get transformation ", err)
+        })
+    }  
+
+   
 
         return (
-            <div>
-                
-                Home Page
+            <div className='marTop'>
                 <section class="home">
                 
                     <div class="home-content">
-                        <h1>Système d'information énergétique-Sénégal (SIES)</h1>
+                        <h1>Système d'information énergétique SIE-UEMOA </h1>
                         
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                             Suscipit sint temporibus veniam laboriosam pariatur quis
                             inventore perspiciatis dolorum, dolores atque reprehenderit
                             rem officia quos mollitia quia veritatis architecto nisi quasi?
                         </p>
-                        <div class="btn-box">
-                            <button onClick={()=>{setShowlog(true)}}><a href="#">Se Connecter</a></button>
-                        </div>
                     </div>
-                    {
-                  showlog && <div className='loginDesign'>
-                    <h1>Connexion au SIE</h1>
-                    <form>
-                        <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                        <h3 class="lead fw-normal me-3 mb-3 deco">Utilisez votre Email et Mot de passe</h3 >
-                    
-                        </div>
-                        <div class="form-outline mb-4">
-                            <input type="email" id="form3Example3" class="form-control form-control-lg"
-                                placeholder="Enter a valid email address" name="email"
-                                value={email} 
-                                onChange={handleChangeEmail} 
-                                required
-                            />
-                        <label class="form-label" for="form3Example3">Email address</label>
-                        </div>
-        
-                   
-                        <div class="form-outline mb-3">
-                        <input type="password" id="form3Example4" class="form-control form-control-lg"
-                            placeholder="Enter password"
-                            name='password'
-                            value={password}
-                            onChange={(e)=>setPassword(e.target.value)}
-                            required
-                            />
-                        <label class="form-label" for="form3Example4">Password</label>
-                        </div>
-        
-                        <div class="d-flex justify-content-between align-items-center">
-                    
-                        <div class="form-check mb-0">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                            <label class="form-check-label" for="form2Example3">
-                            Remember me
-                            </label>
-                        </div>
-                        <a href="#!" class="text-body">Forgot password?</a>
-                        </div>
-        
-                        <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="submit" class="myButton"
-                            Style="padding-left: 2.5rem; padding-right: 2.5rem;"
-                            onClick={login}
-                        >
-                            Login
-                        </button>
-                    
-                    </div>
-        
-                </form>
-
-                  </div>
-                }
-                {
-                    !showlog && <div className='loginDesign' /* Style="marginTop:10%; width:70%; height: 70%;" */>
-                    <div class="box">
-                            <span Style="--i:1"><img src={image1} alt=""/></span>
-                            <span Style="--i:2"><img src={image2} alt=""/></span>
-                            <span Style="--i:3"><img src={image3} alt=""/></span>
-                            <span Style="--i:4"><img src={image4} alt=""/></span>
-                            <span Style="--i:5"><img src={image5} alt=""/></span>
-                            <span Style="--i:6"><img src={image6} alt=""/></span>
-                            <span Style="--i:7"><img src={image3} alt=""/></span>
-                            <span Style="--i:7"><img src={image5} alt=""/></span>
-                        </div>
-
-                    </div>
-                }
                 </section>
+                <section>
+                    <div>
+                        <div className='list-card'>
+                            <button className={zone=="UEMOA"?"background:green":""} onClick={()=>{getDataByCountry("UEMOA")}}>
+                            <Card className={"max-w-xs mx-auto m-2"} decoration="top" decorationColor="orange" Style={uemoaColor ? "background:#40867d":""}>
+                                <Text></Text>
+                                <Metric Style={uemoaColor ? "text-align:center;color:white":"text-align:center;"}>UEMOA</Metric>
+                            </Card>
+                            </button>
+                            <button onClick={()=>{getDataByCountry("SEN")}}>
+                            <Card className="max-w-xs mx-auto m-2" decoration="top" decorationColor="orange"  Style={senegalColor ? "background:#40867d":""}>
+                                <Text></Text>
+                                <Metric Style={senegalColor ? "text-align:center;color:white":"text-align:center;"}>Sénégal</Metric>
+                            </Card>
+                            </button>
+                            <button onClick={()=>{getDataByCountry("GUI")}}>
+                            <Card className="max-w-xs mx-auto m-2" decoration="top" decorationColor="orange" Style={guineeColor ? "background:#40867d":""}>
+                                <Text></Text>
+                                <Metric Style={guineeColor ? "text-align:center;color:white":"text-align:center;"}>Guinée</Metric>
+                            </Card>
+                            </button>
+                            <button onClick={()=>{getDataByCountry("BEN")}}>
+                            <Card className="max-w-xs mx-auto m-2" decoration="top" decorationColor="orange" Style={beninColor ? "background:#40867d":""}>
+                                <Text></Text>
+                                <Metric Style={beninColor ? "text-align:center;color:white":"text-align:center;"}>Bénin</Metric>
+                            </Card>
+                            </button>
+                        </div>
+                    <div className='graphe'>
+                    <Card className="m-2">
+                        <Title>Données consommation finale {zone}</Title>
+                        <AreaChart
+                            className="h-72 w-100 mt-4"
+                            data={vuebilanSomme}
+                            index="annee"
+                            categories={["valeur"]}
+                            colors={["red"]}
+                            valueFormatter={valueFormatter}
+                        />
+                    </Card>
+                    <Card className="m-2">
+                        <Title>Données Transformation {zone}</Title>
+                        <AreaChart
+                            className="h-72 w-100 mt-4"
+                            data={trans}
+                            index="annee"
+                            categories={["valeur"]}
+                            colors={["green"]}
+                            valueFormatter={valueFormatter}
+                        />
+                    </Card>
+                    </div>
+
+                    <div className='graphe'>
+                    <Card className="m-2">
+                        <Title>Données approvisiomment interieur {zone}</Title>
+                        <BarChart
+                            className="h-72 w-100 mt-4"
+                            data={approv}
+                            index="annee"
+                            categories={["valeur"]}
+                            colors={["orange"]}
+                            valueFormatter={valueFormatter}
+                        />
+                    </Card>
+                    <Card className="m-2">
+                        <Title>Données électricité produite {zone}</Title>
+                        <DonutChart
+                            className="h-72 w-100 mt-4"
+                            data={elecProd}
+                            category="valeur"
+                            index="annee"
+                            valueFormatter={valueFormatter}
+                            colors={["violet", "green", "rose", "yellow"]}
+                        />  
+                    </Card>
+                    </div>
+                    </div>
+                </section>
+                
             </div>
         );
     }

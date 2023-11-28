@@ -195,6 +195,10 @@ export default function HomeIndustrie() {
         industrieService.getAllHorsProd(localStorage.getItem("sigle")).then((res)=>{
             console.log('data utilisation hors production energetique', res);
             SetHorsProd(res.data)
+            const year = getCurrentYear()-1;
+            setFilteredData(res.data.filter(a => a.annee - year === 0))
+            console.log('données === ',res.data,"données filtrer ==== ",filteredData)
+
         }).catch((err)=>{
             console.log("error recupération ",err)
         })
@@ -232,8 +236,8 @@ export default function HomeIndustrie() {
         console.log("error recupération use hors",err)
       }) 
 
-      setFilteredData(horsProd.filter(horsProd => horsProd.annee.startsWith(getCurrentYear())));
-      console.log('données filtrer',filteredData)
+      const newArray = horsProd.filter(a => a.annee == getCurrentYear()-1);
+      console.log('données === ',horsProd,"données filtrer ==== ",newArray)
     },[])
 
     function setShowHistoryNew(){
@@ -394,13 +398,14 @@ export default function HomeIndustrie() {
                         <button type="reset" className="otherButton" onClick={()=>{setShowFormHorsProdEner(false)} }>Annuler</button>
                     
                         </form>
-                        <table className="table table-striped myfont">
+                        <table className="table table-striped table-bordered mt-1 myfont">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Année</th>
                                     <th scope="col">Combustible</th>
                                     <th scope="col">Quantité (kwh)</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className=''>
@@ -425,6 +430,7 @@ export default function HomeIndustrie() {
                                             </td>
 
                                         </tr>
+                                        
                                     )
                                 }
                             </tbody>

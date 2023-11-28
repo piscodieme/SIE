@@ -26,6 +26,11 @@ import HomeIndustrie from './Components/Industrie/HomeIndustrie';
 import HomeHydrocarbure from './Components/Hydrocarbure/HomeHydrocarbure';
 import Presentation from './Components/Presentation';
 import Rapports from './Components/Rapports';
+import Stats from './Components/Stats';
+import Bilan from './Components/Bilan';
+import {registerLicense} from '@syncfusion/ej2-base';
+
+registerLicense("Ngo9BigBOggjHTQxAR8/V1NHaF1cWWhIfEx0TXxbf1xzZFBMYVxbQHFPMyBoS35RdURiW3dedXVVQmhUVEV1");
 
 function App() {
   const [isLogged, setIsLogged]=useState(false);
@@ -45,7 +50,6 @@ function App() {
               <div className="container">
               <Header/>
                 <Routes>
-                  <Route path='/' exact   element={ <Homepage/>}></Route>
                   <Route element={ <PrivateRoute isLogged={isLogged}/>}>
                       <Route path='/acteurs' element={<ListActeursComponent/>}></Route>
                       <Route path='/updateActeurs/:id' element={<UpdateActeurcomponent/>}></Route>
@@ -64,12 +68,14 @@ function App() {
                       <Route path='/ventenf'  element={<VenteEnergieNonFournie />}></Route>
                       <Route path='/industrie'  element={<HomeIndustrie />}></Route>
                       <Route path='/hydrocarbure'  element={<HomeHydrocarbure />}></Route>
+                      <Route path='/stats'  element={<Stats />}></Route>
+                      <Route path='/accueil'  element={<Homepage />}></Route>
+                      <Route path='/presentation'  element={<Presentation />}></Route>
+                      <Route path='/rapports'  element={<Rapports />}></Route>
+                      <Route path='/bilan'  element={<Bilan />}></Route>
 
-                      
                   </Route>
-                  <Route path='/presentation'  element={<Presentation />}></Route>
-                  <Route path='/rapports'  element={<Rapports />}></Route>
-
+                  <Route path='/' exact   element={ <LoginComponent/>}></Route>
                 </Routes>
                 
               </div>

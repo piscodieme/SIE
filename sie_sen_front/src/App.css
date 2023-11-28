@@ -1,3 +1,18 @@
+@import url("https://cdn.syncfusion.com.ej2/bootstrap5.css");
+
+@import '../node_modules/@syncfusion/ej2-base/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-grids/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-lists/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import '../node_modules/@syncfusion/ej2-calendars/styles/material.css';
+@import '../node_modules/@syncfusion/ej2-react-pivotview/styles/material.css';
+
+
 .App {
   text-align: center;
 }
@@ -13,10 +28,22 @@
   }
 }
 
-.marTop{
-  margin-top: 12%;
+#idbtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
+.marTop{
+  margin-top: 10%;
+}
+.request-form{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
 .App-header {
  /*  background-color: #d6dddf; */
   min-height: 90vh;
@@ -32,6 +59,194 @@
 .App-link {
   color: #61dafb;
 }
+
+.myBody{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.containerr{
+  background: #de7878;
+  position: relative;
+  overflow: hidden;
+  width: 70%;
+  max-width: 100%;
+  height: 70%;
+  max-height: 780px;
+  border: 2px solid black;
+  box-shadow: 12px 12px 2px 1px rgba(57, 95, 47, 0.2);
+}
+
+.containerr p {
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.3px;
+  margin : 20px 0;
+}
+
+.containerr span{
+  font-size: 16px;
+}
+.containerr a{
+  color: #333;
+  font-size: 13px;
+  text-decoration: none;
+  margin: 25px 0 20px;
+}
+
+.containerr button.hidden{
+  background: transparent;
+  border-color: #fff;
+}
+
+.containerr form{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  flex-direction: column;
+  padding: 20px 40px;
+  height: 100%;
+/*   border: 1px solid black;
+ */  
+ box-shadow: 12px 12px 12px 12px rgba(0, 0, 255, .2);
+}
+
+.containerr input{
+  background-color: #eee;
+  border: none;
+  margin: 10px 5px;
+  padding: 10px 15px;
+  font-size: 15px;
+  width: 100%;
+  outline: none;
+}
+.form-containerr{
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in{
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.containerr.active .sign-in{
+  transform: translateX(100%);
+}
+
+.sign-up{
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.containerr.active .sign-up{
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: move 0.6s;
+}
+
+@keyframes move{
+  0%, 49.99%{
+    opacity: 0;
+    z-index: 1;
+  }
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+.socia-icons{
+  margin: 40px 0;
+}
+
+.socia-icons a{
+  border: 1px solid #ccc;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 15px;
+  width: 40px;
+  height: 40px;
+}
+.icons{
+  font-size: 50px;
+  margin: 10px;
+}
+
+.toggle-containerr{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
+  z-index: 1000;
+}
+.containerr.active .toggle-containerr{
+  transform: translateX(-100%);
+  border-radius: 0 150px 100px 0;
+}
+
+.toggle{
+  background-color: #40867d;
+  height: 100%;
+  background: linear-gradient(to right ,#FF6D60,#40867d);
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: all 0.6s ease-in-out;
+}
+
+.containerr.active .toggle{
+  transform: translateX(50%);
+}
+.toggle-panel{
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 30px;
+  text-align: center;
+  top:0 ;
+  transform: translateX(0);
+  transition: all 0.6 ease-in-out;
+}
+
+.toggle-left{
+  transform: translateX(-200%);
+}
+
+.containerr.active .toggle-left{
+  transform: translateX(0);
+}
+
+.toggle-right{
+  transform: translateX(0);
+  right: 0;
+}
+.containerr.active .toggle-right{
+  transform: translateX(200%);
+}
+
+
 
 @keyframes App-logo-spin {
   from {
@@ -64,6 +279,10 @@
 
 .header{
   width: 100%;
+}
+
+.styleNav{
+  width: 70%;
 }
 
 .UpdateDeleteBtn{
@@ -179,8 +398,7 @@ body{
 
 }
 .home-content{
-  max-width: 500px;
-  margin-right: 10%;
+  max-width: 100%;
 }
 .home-content h1{
   font-size: 45px;
@@ -245,12 +463,32 @@ body{
 .btn-box a:hover::before{
   width: 100%;
 }
+.listBox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
 
+.graphe{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1%;
+}
+
+.list-card{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 2%;
+}
 .home{
-  height: 100vh;
+  height: auto;
   display: flex;
   align-items: center;
-  padding: 0 1%;
+  padding: 0;
   /* background: url('./../public/bg2.jpg') no-repeat; */
   background-size: cover;
   background-position: center;
@@ -271,8 +509,7 @@ body{
   font-size: 35px;
   color:#E0E7E9;
   text-decoration: none;
-  font-weight: 1000;
-  
+  font-weight: 100;
 }
 #logo{
   width: 25%;
@@ -297,8 +534,8 @@ body{
   font-size: 20px;
   color: #E0E7E9;
   text-decoration: none;
-  font-weight: 500;
-  margin-left: 20px;
+  font-weight: 400;
+  margin-left: 10px;
 }
 
 .navbar a:hover,
@@ -385,12 +622,14 @@ body{
 /* slide end */
 
 .loginDesign{
-  width: 70%;
-  height: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 90%;
   z-index: 1;
   box-shadow: #E0E7E9;
-  margin-top: 15%;
-  margin-left: 15%;
 }
 form div h3{
   font-size: 50px;
@@ -414,9 +653,9 @@ form div h3{
   background:#FF6B6B ;
 }
 
-thead{
+/* thead{
   background:#FF6B6B;
-}
+} */
 
 .action{
   position: relative;

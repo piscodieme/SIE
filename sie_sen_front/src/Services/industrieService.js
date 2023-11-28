@@ -6,7 +6,7 @@ const industrieHorsProd = 'http://localhost:8080/api/horsprodener/horsprodener'
 const industrieProdBrute = 'http://localhost:8080/api/prodBrute/prodBrute'
 const industrieCombustible = 'http://localhost:8080/api/combustible/combustible'
 const industrieProduits = 'http://localhost:8080/api/produitIndustrie/produitIndustrie'
-const usehors = 'http://localhost:8080/api/horsprodener/horsprodener'
+const usehors = 'http://localhost:8080/api/horsprodener/usehorscurrentyear'
 
 class industrieService{
 
